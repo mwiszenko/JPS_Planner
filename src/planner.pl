@@ -1,13 +1,16 @@
-plan(State, Goals, [ ], State) :- goals_achieved(Goals, State).
+plan(State, Goals, _, [ ], State) :- goals_achieved(Goals, State).
 
-plan(InitState, Goals, Plan, FinalState) :-
+plan(InitState, Goals, Limit, Plan, FinalState) :-
+    Limit > 0,
+    gen_limit(0, Limit, LimitPre),
     choose_goal(Goal, Goals, RestGoals, InitState),
     achieves(Goal, Action),
     requires(Action, CondGoals),
-    plan(InitState, CondGoals, PrePlan, State1),
+    plan(InitState, CondGoals, LimitPre, PrePlan, State1),
     inst_action(Action, Goal, State1, InstAction),
     perform_action(State1, InstAction, State2),
-    plan(State2, RestGoals, PostPlan, FinalState),
+    LimitPost is Limit - LimitPre - 1,
+    plan(State2, RestGoals, LimitPost, PostPlan, FinalState),
     conc(PrePlan, [ InstAction | PostPlan ], Plan).
 
 % conc
@@ -27,6 +30,16 @@ del(X, [X|T], T) :- !.
 
 del(X, [Y|T1], [Y|T2]) :-
     del(X, T1, T2).
+
+% gen_limit
+
+gen_limit(Cur, Max, Cur):-
+    Cur < Max.
+
+gen_limit(Cur, Max, Next):-
+    Cur < Max,
+    Cur1 is Cur + 1,
+    gen_limit(Cur1, Max, Next).
 
 % goals_achieved --- sprawdza, czy wszystkie cele z podanej listy są spełnione w aktualnym stanie.
 % Cele mogą być zarówno ukonkretnione, jak i nie ukonkretnione—z argumentami w postaci zmiennych
