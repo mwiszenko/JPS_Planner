@@ -1,14 +1,14 @@
-plan(State, Goals, [ ], State) :- goals_achieved(Goals, State), !.
+plan(State, Goals, [ ], State) :- goals_achieved(Goals, State).
 
 plan(InitState, Goals, Plan, FinalState) :-
-	choose_goal(Goal, Goals, RestGoals, InitState),
+    choose_goal(Goal, Goals, RestGoals, InitState),
     achieves(Goal, Action),
     requires(Action, CondGoals),
     plan(InitState, CondGoals, PrePlan, State1),
     inst_action(Action, Goal, State1, InstAction),
     perform_action(State1, InstAction, State2),
     plan(State2, RestGoals, PostPlan, FinalState),
-    conc(PrePlan, [ InstAction | PostPlan ], Plan), !.
+    conc(PrePlan, [ InstAction | PostPlan ], Plan).
 
 % conc
 conc([], L, L) :- !.
@@ -37,36 +37,33 @@ del(X, [Y|T1], [Y|T2]) :-
 goals_achieved([], _).
 
 goals_achieved([Goal|RestGoals], State) :-
-	goal_achieved(Goal, State),
-	goals_achieved(RestGoals, State).
+    goal_achieved(Goal, State),
+    goals_achieved(RestGoals, State).
 
 % goal_achieved --- sprawdza, czy pojedynczy cel jest spełniony z podanej listy.
 
-goal_achieved(on(A, B), State) :-
-	mem(on(A, B), State).
-
 goal_achieved(clear(A), State) :-
     mem(clear(A), State).
-	
-goal_achieved(clear(A/Goal), State) :-
-	goal_achieved(Goal, State),
-	mem(clear(A), State).
 
-goal_achieved(on(A, B/Goal), State) :-
-	goal_achieved(Goal, State),
-	mem(on(A, B), State).
+goal_achieved(clear(A/B), State) :-
+    nonvar(B),
+    mem(clear(A), State),
+    goal_achieved(B, State).
 
-goal_achieved(dif(A/W1, B/W2), State) :-
-	goal_achieved(W1, State),
-	goal_achieved(W2, State),
-	dif(A, B).
+goal_achieved(on(A, B), State) :-
+    mem(on(A, B), State).
+
+goal_achieved(on(A, B/C), State) :-
+    nonvar(C),
+    mem(on(A, B), State),
+    goal_achieved(C, State).
 
 % requires --- określa warunki wykonania podanej akcji, które stają się celami dla następnego kroku
 % algorytmu.
 
 requires(move(What, From/on(What, From), On), [clear(What), clear(On)]).
 
-requires(move(What, _, _), [clear(What)]).
+requires(move(What/on(What, From), From, _), [clear(What/on(What, From))]).
 
 % achieves --- określa akcję osiągającą podany cel. Cel może być zarówno ukonkretniony, jak i nie
 % ukonkretniony--z argumentami w postaci zmiennych z nałożonymi warunkami. W konsekwencji
@@ -81,10 +78,10 @@ achieves(clear(On), move(What/on(What, On), On, _)).
 % aktualnym stanie.
 
 choose_goal(Goal, [Goal|RestGoals], RestGoals, State) :-
-	not(goal_achieved(Goal, State)).
+    not(goal_achieved(Goal, State)).
 	
 choose_goal(Goal, [X|Goals], [X|RestGoals], State) :-
-	choose_goal(Goal, Goals, RestGoals, State).
+    choose_goal(Goal, Goals, RestGoals, State).
 
 % perform_action - określa stan osiągany ze stanu podanego przez wykonanie podanej akcji. 
 % wykonuje akcje, czyli: z podanych operacji move oraz stanu, do którego chcemy dojść wyłuskujemy
@@ -102,19 +99,32 @@ perform_action(State1, move(What, From, On), [on(What, On), clear(From) | State2
 % występujące w argumentach akcji nie ukonkretnionej mogą mieć w chwili wywołania inst_action 
 % przypisane wartości (przypisanie wartości nastąpiło w ramach konstruowania preplanu).
 
-inst_action(move(What, From, On), on(_, _), State, move(InstWhat, InstFrom, InstOn)) :-
-	goal_achieved(on(What, From), State),
-    inst_variable(What, State, InstWhat),
-	inst_variable(From, State, InstFrom),
-	inst_variable(On, State, InstOn).
+inst_action(move(What, From, On), on(What, On), State, move(InstWhat, InstFrom, InstOn)) :-
+    goals_achieved([on(What, From)], State),
+    inst(What, State, InstWhat),
+    inst(From, State, InstFrom),
+    inst(On, State, InstOn).
 
-inst_action(move(What, From, On), clear(_), State, move(InstWhat, InstFrom, InstOn)) :-
-	goals_achieved([clear(On), dif(On, What)], State),
-    inst_variable(What, State, InstWhat),
-	inst_variable(From, State, InstFrom),
-	inst_variable(On, State, InstOn).
+inst_action(move(What, From, On), clear(From), State, move(InstWhat, InstFrom, InstOn)) :-
+    goals_achieved([clear(On)], State),
+    conds_achieved(What, On, State),
+    inst(What, State, InstWhat),
+    inst(From, State, InstFrom),
+    inst(On, State, InstOn).
 
-inst_variable(A/B, State, A) :-
-	goal_achieved(B, State).
-	
-inst_variable(A, _, A).
+% conds_achieved
+
+conds_achieved(A/B, C, State) :-
+    A \= C,
+    goal_achieved(B, State).
+
+conds_achieved(A, B/C, State) :-
+    A \= B,
+    goal_achieved(C, State).
+
+% inst
+
+inst(A, _, A).
+
+inst(A/B, State, A) :-
+    goal_achieved(B, State).
