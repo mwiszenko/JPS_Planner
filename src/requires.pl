@@ -5,6 +5,8 @@ requires(move(What, From/on(What, From), On), [clear(What), clear(On)]).
 
 requires(move(What/on(What, From), From, _), [clear(What/on(What, From))]).
 
+% test requires
+
 :- begin_tests(requires).
 
 test(1, Conds == [clear(a), clear(c)]) :-
