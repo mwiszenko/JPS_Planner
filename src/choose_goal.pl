@@ -1,3 +1,5 @@
+:- [goals_achieved].
+
 % choose_goal --- z podanej listy celów wybiera do przetwarzania cel, który nie jest spełniony w
 % aktualnym stanie.
 

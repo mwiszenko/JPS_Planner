@@ -1,3 +1,5 @@
+:- [goals_achieved].
+
 % check_action
 
 check_action(move(What, From, On), AchievedGoals) :-

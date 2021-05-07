@@ -1,3 +1,5 @@
+:- [goals_achieved].
+
 % inst_action --- ukonkretnia akcję przed wykonaniem . W zależności od rodzaju celu, 
 % do którego akcja była dobrana przez procedurę achieves, niektóre/wszystkie zmienne 
 % występujące w argumentach akcji nie ukonkretnionej mogą mieć w chwili wywołania inst_action 

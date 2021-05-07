@@ -1,3 +1,5 @@
+:- [utils].
+
 % goals_achieved --- sprawdza, czy wszystkie cele z podanej listy są spełnione w aktualnym stanie.
 % Cele mogą być zarówno ukonkretnione, jak i nie ukonkretnione—z argumentami w postaci zmiennych
 % z nałożonymi warunkami.
