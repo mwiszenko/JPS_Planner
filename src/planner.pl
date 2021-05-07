@@ -1,3 +1,7 @@
+plan(InitState, Goals, MaxLimit, Plan, FinalState) :-
+    gen_limit(0, MaxLimit, Limit),
+    plan(InitState, Goals, [], Limit, Plan, FinalState).
+
 plan(State, Goals, _, _, [], State) :- goals_achieved(Goals, State).
 
 plan(InitState, Goals, AchievedGoals, Limit, Plan, FinalState) :-
@@ -35,13 +39,13 @@ del(X, [Y|T1], [Y|T2]) :-
 
 % gen_limit
 
-gen_limit(Cur, Max, Cur):-
-    Cur < Max.
+gen_limit(Curr, Max, Curr):-
+    Curr < Max.
 
-gen_limit(Cur, Max, Next):-
-    Cur < Max,
-    Cur1 is Cur + 1,
-    gen_limit(Cur1, Max, Next).
+gen_limit(Curr, Max, Next):-
+    Curr < Max,
+    NewCurr is Curr + 1,
+    gen_limit(NewCurr, Max, Next).
 
 % goals_achieved --- sprawdza, czy wszystkie cele z podanej listy są spełnione w aktualnym stanie.
 % Cele mogą być zarówno ukonkretnione, jak i nie ukonkretnione—z argumentami w postaci zmiennych
