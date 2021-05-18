@@ -53,11 +53,11 @@ test(3, [nondet]) :-
 test(1, [nondet]) :-
     goal_achieved(clear(a), [on(a, b), clear(a)]).
 
-test(2, [nondet]) :-
-    not(goal_achieved(clear(a), [on(a, b), clear(b)])).
+test(2, [nondet, fail]) :-
+    goal_achieved(clear(a), [on(a, b), clear(b)]).
 
-test(3, [nondet]) :-
-    not(goal_achieved(on(a, _), [clear(a), clear(b)])).
+test(3, [nondet, fail]) :-
+    goal_achieved(on(a, _), [clear(a), clear(b)]).
 
 test(4, [nondet]) :-
     goal_achieved(clear(a/on(a, X)), [clear(a), clear(b), on(a, b)]),

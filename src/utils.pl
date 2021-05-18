@@ -55,11 +55,11 @@ test(1, [nondet]) :-
 test(2, [nondet]) :-
     mem(a, [a, b, c]).
 
-test(3, [nondet]) :-
-    not(mem(a, [])).
+test(3, [nondet, fail]) :-
+    mem(a, []).
 
-test(4, [nondet]) :-
-    not(mem(a, [b, c, d])).
+test(4, [nondet, fail]) :-
+    mem(a, [b, c, d]).
 
 test(5, [nondet]) :-
     mem(a, [a, b, a]).
