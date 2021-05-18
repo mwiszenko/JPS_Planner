@@ -23,20 +23,25 @@ del(X, [Y|T1], [Y|T2]) :-
 
 :- begin_tests(conc).
 
-test(1, Res == []) :-
-    conc([], [], Res).
+test(1) :-
+    conc([], [], Res),
+    Res == [].
 
-test(2, Res == [a, b, c]) :-
-    conc([], [a, b, c], Res).
+test(2) :-
+    conc([], [a, b, c], Res),
+    Res == [a, b, c].
 
-test(3, Res == [a, b, c]) :-
-    conc([a, b, c], [], Res).
+test(3) :-
+    conc([a, b, c], [], Res),
+    Res == [a, b, c].
 
-test(4, Res == [a, b, c]) :-
-    conc([a], [b, c], Res).
+test(4) :-
+    conc([a], [b, c], Res),
+    Res == [a, b, c].
 
-test(5, Res == [a, a, b, a]) :-
-    conc([a], [a, b, a], Res).
+test(5) :-
+    conc([a], [a, b, a], Res),
+    Res == [a, a, b, a].
 
 :- end_tests(conc).
 
@@ -65,13 +70,16 @@ test(5, [nondet]) :-
 
 :- begin_tests(del).
 
-test(1, Res == [b, c]) :-
-    del(a, [a, b, c], Res).
+test(1) :-
+    del(a, [a, b, c], Res),
+    Res == [b, c].
 
-test(2, Res == [b, c]) :-
-    del(a, [b, a, c], Res).
+test(2) :-
+    del(a, [b, a, c], Res),
+    Res == [b, c].
 
-test(3, Res == [a, a]) :-
-    del(a, [a, a, a], Res).
+test(3) :-
+    del(a, [a, a, a], Res),
+    Res == [a, a].
 
 :- end_tests(del).
