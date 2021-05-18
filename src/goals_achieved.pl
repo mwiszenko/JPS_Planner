@@ -29,3 +29,38 @@ goal_achieved(on(A, B/C), State) :-
     nonvar(C),
     mem(on(A, B), State),
     goal_achieved(C, State).
+
+% test goals_achieved
+
+:- begin_tests(goals_achieved).
+
+test(1) :-
+    goals_achieved([], [on(a, b), clear(b)]).
+
+test(2, [nondet]) :-
+    goals_achieved([on(a, X)], [on(a, b), clear(b)]),
+    X == b.
+
+test(3, [nondet]) :-
+    goals_achieved([on(a, b), clear(b)], [clear(c), clear(b), on(a, b)]).
+
+:- end_tests(goals_achieved).
+
+% test goal_achieved
+
+:- begin_tests(goal_achieved).
+
+test(1, [nondet]) :-
+    goal_achieved(clear(a), [on(a, b), clear(a)]).
+
+test(2, [nondet]) :-
+    not(goal_achieved(clear(a), [on(a, b), clear(b)])).
+
+test(3, [nondet]) :-
+    not(goal_achieved(on(a, _), [clear(a), clear(b)])).
+
+test(4, [nondet]) :-
+    goal_achieved(clear(a/on(a, X)), [clear(a), clear(b), on(a, b)]),
+    X == b.
+
+:- end_tests(goal_achieved).
