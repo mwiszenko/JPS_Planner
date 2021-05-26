@@ -1,7 +1,8 @@
 :- [utils, goals_achieved, requires, achieves, inst_action, perform_action, check_action, gen_limit, choose_goal].
 
 plan(InitState, Goals, MaxLimit, Plan, FinalState) :-
-    gen_limit(0, MaxLimit, Limit),
+    gen_limit(0, MaxLimit + 1, Limit),
+    write('Current plane length limit: '), write(Limit), nl,
     plan(InitState, Goals, [], Limit, Plan, FinalState).
 
 plan(State, Goals, _, _, [], State) :- goals_achieved(Goals, State).
