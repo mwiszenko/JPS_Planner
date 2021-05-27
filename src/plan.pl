@@ -1,20 +1,20 @@
 % Pusta lista celów:
-% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [], 5, A, B).
+% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [], 5, Plan, FinalState).
 
 % Wszystkie cele od razu osiągnięte:
-% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [on(b3, b1), on(b4, p1), clear(b3)], 5, A, B).
+% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [on(b3, b1), on(b4, p1), clear(b3)], 5, Plan, FinalState).
 
 % Jeden cel do osiągnięcia:
-% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [on(b4, b2)], 5, A, B).
+% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [on(b4, b2)], 5, Plan, FinalState).
 
 % Wiele celi do osiągnięcia:
-% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [on(b4, b2), clear(p1), on(b2, b1), clear(p2), on(b1, p4)], 10, A, B).
+% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [on(b4, b2), clear(p1), on(b2, b1), clear(p2), on(b1, p4)], 10, Plan, FinalState).
 
 % Za mały limit długości planu:
-% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [on(b4, b2), clear(p1), on(b2, b1), clear(p2), on(b1, p4)], 4, A, B).
+% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [on(b4, b2), clear(p1), on(b2, b1), clear(p2), on(b1, p4)], 4, Plan, FinalState).
 
 % Niemożliwy do zrealizowania:
-% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [on(b4, b1), on(b1, b4)], 10, A, B).
+% plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [on(b4, b1), on(b1, b4)], 10, Plan, FinalState).
 
 :- [utils, goals_achieved, requires, achieves, inst_action, perform_action, check_action, gen_limit, choose_goal].
 
