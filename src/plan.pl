@@ -2,7 +2,7 @@
 
 plan(InitState, Goals, MaxLimit, Plan, FinalState) :-
     gen_limit(0, MaxLimit + 1, Limit),
-    write('Current plane length limit: '), write(Limit), nl,
+    write('Current plan length limit: '), write(Limit), nl,
     plan(InitState, Goals, [], Limit, Plan, FinalState).
 
 plan(State, Goals, _, _, [], State) :- goals_achieved(Goals, State).
@@ -21,3 +21,6 @@ plan(InitState, Goals, AchievedGoals, Limit, Plan, FinalState) :-
     conc([Goal], AchievedGoals, AchievedGoals1),
     plan(State2, RestGoals, AchievedGoals1, LimitPost, PostPlan, FinalState),
     conc(PrePlan, [ InstAction | PostPlan ], Plan).
+
+ex_empty_goals() :-
+    plan([on(b3, b1), on(b1, b4), on(b4, p1), on(b2, p3), clear(b3), clear(p2), clear(b2), clear(p4)], [], 5, A, B).
